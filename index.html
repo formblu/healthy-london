@@ -1,0 +1,2225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Healthy London</title>
+<meta name="description" content="Explore healthy life expectancy across London's five NHS Integrated Care Boards. Compare HLE and LE by sex and age, see how outcomes have changed over a decade, and read key insights for each ICB." />
+<meta name="theme-color" content="#2f5d3a" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Healthy London — Healthy Life Expectancy" />
+<meta property="og:description" content="Explore healthy life expectancy across London's five NHS Integrated Care Boards." />
+<meta property="og:image" content="slides/01-cover.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Healthy London — Healthy Life Expectancy" />
+<meta name="twitter:description" content="Explore healthy life expectancy across London's five NHS Integrated Care Boards." />
+<meta name="twitter:image" content="slides/01-cover.jpg" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f5d3a'/%3E%3Ctext x='50%25' y='52%25' text-anchor='middle' dominant-baseline='central' font-family='-apple-system,BlinkMacSystemFont,sans-serif' font-size='20' font-weight='800' fill='white'%3Eh%3C/text%3E%3C/svg%3E" />
+<style>
+  :root {
+    --bg: #f5f5f0;
+    --panel: #ffffff;
+    --ink: #1a1a1a;
+    --muted: #6b6b6b;
+    --border: #e2e2dc;
+    --accent: #2f5d3a;
+    --accent-soft: #e8efe8;
+    --hover-stroke: #2f5d3a;
+    --scale-0: #eef3ee;
+    --scale-1: #cfe0d2;
+    --scale-2: #a3c4ad;
+    --scale-3: #6fa37f;
+    --scale-4: #3f7a55;
+    --scale-5: #1f5234;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+  }
+
+  .app {
+    display: grid;
+    grid-template-rows: 52px 1fr;
+    grid-template-columns: 280px 1fr;
+    height: 100vh;
+    max-width: 1580px;
+    margin: 0 auto;
+  }
+
+  /* Top navigation */
+  .nav {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 0 22px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-brand {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-links a {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background 120ms ease, color 120ms ease;
+  }
+
+  .nav-links a:hover:not(.is-disabled):not(.is-active) {
+    background: var(--accent-soft);
+    color: var(--ink);
+  }
+
+  .nav-links a.is-active {
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .nav-links a.is-disabled {
+    color: #c2c2b8;
+    cursor: not-allowed;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    padding: 28px 22px;
+    overflow-y: auto;
+  }
+
+  .sidebar-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+
+  .filter-group {
+    margin-bottom: 24px;
+  }
+
+  .filter-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--accent-soft);
+    border-radius: 8px;
+    padding: 4px;
+    gap: 4px;
+  }
+
+  .toggle.toggle-3 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .filter-help {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 8px;
+    line-height: 1.35;
+  }
+
+  .toggle button {
+    border: none;
+    background: transparent;
+    padding: 9px 10px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--muted);
+    transition: background 120ms ease, color 120ms ease;
+    font-family: inherit;
+  }
+
+  .toggle button:hover {
+    color: var(--ink);
+  }
+
+  .toggle button.active {
+    background: var(--panel);
+    color: var(--accent);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+
+  .sidebar-section {
+    margin-top: 32px;
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+  }
+
+  .dumbbell-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .dumbbell-legend {
+    display: flex;
+    gap: 14px;
+    margin-top: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .dumbbell-legend .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .dumbbell-legend .legend-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .dumbbell-legend .legend-dot.hle { background: #1f5234; }
+  .dumbbell-legend .legend-dot.le  { background: #4d4d4d; }
+
+  .dumbbell-row {
+    display: grid;
+    grid-template-columns: 36px 1fr 32px;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+  }
+
+  .dumbbell-name {
+    font-weight: 700;
+    color: var(--ink);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+
+  .dumbbell-svg {
+    width: 100%;
+    height: 16px;
+    display: block;
+    overflow: visible;
+  }
+
+  .dumbbell-line {
+    stroke: #c44734;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    opacity: 0.85;
+  }
+
+  .dumbbell-svg circle {
+    stroke: #ffffff;
+    stroke-width: 1.2;
+  }
+
+  .dumbbell-svg circle.hle { fill: #1f5234; }
+  .dumbbell-svg circle.le  { fill: #4d4d4d; }
+
+  .dumbbell-gap {
+    text-align: right;
+    font-weight: 700;
+    color: #c44734;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Slope chart — decade ago vs now (sidebar) */
+  .slope-chart {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-top: 4px;
+    overflow: visible;
+  }
+
+  .slope-chart .slope-line {
+    fill: none;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+  }
+
+  .slope-chart .slope-line.up   { stroke: #1f5234; }
+  .slope-chart .slope-line.down { stroke: #c44734; }
+  .slope-chart .slope-line.flat { stroke: #888888; }
+
+  .slope-chart circle.dot.up   { fill: #1f5234; }
+  .slope-chart circle.dot.down { fill: #c44734; }
+  .slope-chart circle.dot.flat { fill: #888888; }
+  .slope-chart circle.dot {
+    stroke: #ffffff;
+    stroke-width: 1;
+  }
+
+  .slope-chart .col-header {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    fill: var(--muted);
+  }
+
+  .slope-chart .value-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    fill: var(--ink);
+    font-variant-numeric: tabular-nums;
+    dominant-baseline: central;
+  }
+
+  .slope-chart .value-label.up   { fill: #1f5234; }
+  .slope-chart .value-label.down { fill: #c44734; }
+  .slope-chart .value-label.flat { fill: #888888; }
+
+  .slope-chart .icb-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    fill: var(--ink);
+    dominant-baseline: central;
+  }
+
+  /* Main */
+  .main {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header {
+    padding: 24px 32px 12px 32px;
+    background: transparent;
+  }
+
+  .header h2 {
+    margin: 0 0 4px 0;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .header .caption {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .header .caption-period {
+    color: var(--ink);
+    font-size: 13px;
+  }
+
+  .header .caption-period strong {
+    font-weight: 700;
+  }
+
+  .header .caption-source {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .map-wrap {
+    position: relative;
+    padding: 0 24px 24px 24px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  svg.map {
+    width: 100%;
+    height: auto;
+    max-width: 1300px;
+    max-height: 62vh;
+    overflow: visible;
+  }
+
+  .region {
+    cursor: pointer;
+    stroke: #1a1a1a;
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    transition: fill 220ms ease, stroke-width 120ms ease, filter 200ms ease;
+  }
+
+  .region:hover {
+    stroke: var(--hover-stroke);
+    stroke-width: 3.5;
+  }
+
+  .region.selected {
+    stroke: var(--hover-stroke);
+    stroke-width: 5;
+    filter:
+      drop-shadow(0 0 1.5px rgba(31, 82, 52, 0.85))
+      drop-shadow(0 0 7px rgba(31, 82, 52, 0.55));
+  }
+
+  .region-label {
+    pointer-events: none;
+    font-size: 38px;
+    font-weight: 700;
+    fill: #ffffff;
+    stroke: none;
+  }
+
+  .region-value {
+    pointer-events: none;
+    font-size: 52px;
+    font-weight: 700;
+    fill: #ffffff;
+    stroke: none;
+  }
+
+  .region-value-secondary {
+    pointer-events: none;
+    font-size: 40px;
+    font-weight: 600;
+    fill: #ffffff;
+    stroke: none;
+    opacity: 0.92;
+  }
+
+  .region-divider {
+    stroke: #ffffff;
+    stroke-width: 2;
+    stroke-linecap: round;
+    opacity: 0.55;
+  }
+
+  .region-population {
+    pointer-events: none;
+    font-size: 28px;
+    font-weight: 500;
+    fill: #ffffff;
+    stroke: none;
+    opacity: 0.78;
+    letter-spacing: 0.02em;
+  }
+
+  /* Detail panel below the map */
+  .detail-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border-top: 1px solid var(--border);
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-bottom: 32px;
+  }
+
+  .detail-col {
+    padding: 18px 22px;
+    border-right: 1px solid var(--border);
+    min-height: 200px;
+  }
+
+  .detail-col:last-child {
+    border-right: none;
+  }
+
+  .detail-empty {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .detail-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .detail-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 10px;
+    white-space: nowrap;
+  }
+
+  .insight-headline {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .detail-body {
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .detail-body em {
+    font-style: normal;
+    font-weight: 700;
+  }
+
+  .detail-title .title-period {
+    font-weight: 500;
+    font-size: 12px;
+    color: var(--muted);
+    margin-left: 6px;
+  }
+
+  .spark-row {
+    display: grid;
+    grid-template-columns: 36px 1fr 92px;
+    align-items: center;
+    gap: 14px;
+    margin-top: 12px;
+  }
+
+  .spark-row .spark-key {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .spark-row .spark-key.hle { color: #2f5d3a; }
+  .spark-row .spark-key.le  { color: #888888; }
+
+  .spark-mini {
+    width: 100%;
+    height: 32px;
+    display: block;
+    overflow: visible;
+  }
+
+  .spark-end {
+    text-align: right;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.25;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .spark-end .num {
+    font-weight: 700;
+    color: var(--ink);
+    font-size: 13px;
+  }
+
+  .spark-end .delta {
+    font-size: 10px;
+    font-weight: 600;
+    margin-left: 4px;
+  }
+
+  .spark-end .delta.up   { color: #1f5234; }
+  .spark-end .delta.down { color: #c44734; }
+
+  .spark-axis {
+    display: grid;
+    grid-template-columns: 36px 1fr 92px;
+    gap: 14px;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 10px;
+  }
+
+  .spark-axis .axis-years {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* Methodology + Trends + About pages */
+  .sidebar[hidden],
+  .main[hidden],
+  .methodology[hidden],
+  .trends[hidden],
+  .about[hidden] {
+    display: none;
+  }
+
+  .about {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    overflow-y: auto;
+    background: var(--bg);
+  }
+
+  .about-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 32px 96px;
+  }
+
+  .about-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 28px;
+  }
+
+  .about-section {
+    margin-bottom: 48px;
+  }
+
+  .about-section + .about-section {
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+  }
+
+  .about-section h2 {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0 0 16px;
+  }
+
+  .about-section p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink);
+    margin: 0 0 16px;
+  }
+
+  .about-section p:last-child {
+    margin-bottom: 0;
+  }
+
+  .about-links {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0;
+  }
+
+  .about-links li {
+    margin-bottom: 6px;
+  }
+
+  .about-links a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  .about-links a:hover {
+    text-decoration: underline;
+  }
+
+  .trends {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    overflow-y: auto;
+    background: var(--bg);
+  }
+
+  .trends-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 32px 80px;
+  }
+
+  .trends-header {
+    margin-bottom: 24px;
+  }
+
+  .trends-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+  }
+
+  .trends-lede {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .trends-slide {
+    min-height: calc(100vh - 52px - 64px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 0;
+    scroll-margin-top: 60px;
+  }
+
+  .trends-slide-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .trends-slide img {
+    max-width: 100%;
+    max-height: calc(100vh - 180px);
+    width: auto;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  }
+
+  .methodology {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    overflow-y: auto;
+    background: var(--bg);
+  }
+
+  .methodology-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 32px 96px;
+  }
+
+  .methodology-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 28px;
+  }
+
+  .methodology-summary,
+  .methodology-detail {
+    margin-bottom: 48px;
+  }
+
+  .methodology-summary {
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .methodology-summary h2 {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0 0 16px;
+  }
+
+  .methodology-detail h2 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 18px;
+  }
+
+  .methodology-summary p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink);
+    margin: 0 0 16px;
+  }
+
+  .methodology-summary p:last-child { margin-bottom: 0; }
+
+  .methodology-detail details {
+    border-top: 1px solid var(--border);
+    padding: 18px 0;
+  }
+
+  .methodology-detail details:last-of-type {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .methodology-detail summary {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    user-select: none;
+  }
+
+  .methodology-detail summary::-webkit-details-marker { display: none; }
+
+  .methodology-detail summary::before {
+    content: "+";
+    font-size: 18px;
+    font-weight: 400;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    text-align: center;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .methodology-detail details[open] summary::before { content: "−"; }
+
+  .methodology-detail .details-body {
+    margin: 14px 0 4px;
+    padding-left: 30px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+
+  .methodology-detail .details-body h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 18px 0 6px;
+  }
+
+  .methodology-detail .details-body h3:first-child { margin-top: 0; }
+
+  .methodology-detail .details-body p {
+    margin: 0 0 12px;
+  }
+
+  .methodology-detail .details-body ul {
+    margin: 0 0 12px;
+    padding-left: 18px;
+  }
+
+  .methodology-detail .details-body li {
+    margin-bottom: 6px;
+  }
+
+  .methodology-detail .details-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 16px;
+    font-size: 13px;
+  }
+
+  .methodology-detail .details-body th {
+    text-align: left;
+    font-weight: 700;
+    border-bottom: 2px solid var(--border);
+    padding: 8px 14px 8px 0;
+    vertical-align: top;
+  }
+
+  .methodology-detail .details-body td {
+    border-bottom: 1px solid var(--border);
+    padding: 10px 14px 10px 0;
+    vertical-align: top;
+  }
+
+  .methodology-detail .details-body th:last-child,
+  .methodology-detail .details-body td:last-child {
+    padding-right: 0;
+  }
+
+  .methodology-detail .details-body .cell-meta {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 400;
+    margin-top: 2px;
+  }
+
+  .methodology-detail .details-body code {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    background: var(--accent-soft);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  .methodology-footer {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .methodology-footer a {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+
+  /* Tooltip */
+  .tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: var(--ink);
+    color: #fff;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.45;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+    opacity: 0;
+    transform: translate(-50%, calc(-100% - 12px));
+    transition: opacity 120ms ease;
+    white-space: nowrap;
+    z-index: 10;
+  }
+
+  .tooltip.visible { opacity: 1; }
+
+  .tooltip strong {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+
+  .tooltip .tt-meta {
+    display: block;
+    color: #b3c5b6;
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+
+  .tooltip .tt-rows {
+    display: grid;
+    gap: 4px;
+  }
+
+  .tooltip .tt-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    color: #d8e8db;
+  }
+
+  .tooltip .tt-row .tt-key {
+    color: #b3c5b6;
+  }
+
+  .tooltip .tt-row .tt-val {
+    color: #ffffff;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tooltip .tt-row.tt-gap {
+    margin-top: 4px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .tooltip .tt-row.is-active .tt-key,
+  .tooltip .tt-row.is-active .tt-val {
+    color: #c8e6c9;
+    font-weight: 600;
+  }
+
+  /* ===== Hamburger button (hidden on desktop) ===== */
+  .nav-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+    color: var(--ink);
+    border-radius: 4px;
+    margin-left: auto;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-toggle:hover {
+    background: var(--accent-soft);
+  }
+
+  .nav-toggle .icon-close { display: none; }
+  .nav-toggle[aria-expanded="true"] .icon-menu { display: none; }
+  .nav-toggle[aria-expanded="true"] .icon-close { display: inline-block; }
+
+  /* ===== Responsive: tablet portrait and below (≤768px) ===== */
+  @media (max-width: 768px) {
+    html, body {
+      height: auto;
+      min-height: 100%;
+    }
+
+    .app {
+      grid-template-columns: 1fr;
+      grid-template-rows: 52px auto;
+      height: auto;
+      min-height: 100vh;
+    }
+
+    /* Sticky nav */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 0 16px;
+      gap: 12px;
+    }
+
+    .nav-toggle {
+      display: flex;
+    }
+
+    /* Nav links collapse to drawer */
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: 52px;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      gap: 2px;
+      background: var(--panel);
+      padding: 12px 16px 16px;
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+      z-index: 40;
+    }
+
+    .nav-links.is-open { display: flex; }
+
+    .nav-links li { width: 100%; }
+
+    .nav-links a {
+      display: block;
+      padding: 12px 14px;
+      font-size: 15px;
+      border-radius: 6px;
+    }
+
+    /* Sidebar: full width above main, body scrolls */
+    .sidebar {
+      grid-row: auto;
+      grid-column: 1;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      padding: 20px 16px;
+      overflow-y: visible;
+    }
+
+    /* Main: full width, body scrolls */
+    .main {
+      grid-row: auto;
+      grid-column: 1;
+      overflow: visible;
+    }
+
+    .header {
+      padding: 16px 16px 8px;
+    }
+
+    .header h2 {
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .header .caption-period { font-size: 12px; }
+    .header .caption-source { font-size: 10.5px; }
+
+    /* Map area: tighter padding */
+    .map-wrap {
+      padding: 4px 8px 16px;
+    }
+
+    svg.map {
+      max-height: none;
+    }
+
+    /* Map labels: modest bump for narrow viewport
+       (overly large user-unit sizes overflow the smaller region paths). */
+    .region-label {
+      font-size: 46px;
+    }
+
+    .region-value {
+      font-size: 60px;
+    }
+
+    .region-value-secondary {
+      font-size: 48px;
+    }
+
+    .region-divider {
+      stroke-width: 2.5;
+    }
+
+    /* Slope chart + dumbbell: cap max width so text labels don't blow up at
+       full sidebar width, and center for consistency. */
+    .slope-chart {
+      max-width: 340px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .dumbbell-list,
+    .dumbbell-legend {
+      max-width: 360px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Detail panel: stack to single column */
+    .detail-panel {
+      grid-template-columns: 1fr;
+      margin: 0 16px;
+    }
+
+    .detail-col {
+      padding: 18px 4px;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      min-height: auto;
+    }
+
+    .detail-col:last-child { border-bottom: none; }
+
+    /* Insight body slightly larger on mobile to feel readable */
+    .detail-body { font-size: 14px; }
+
+    /* Methodology / About / Insights pages: tighten padding, allow body scroll */
+    .methodology,
+    .about,
+    .trends {
+      grid-row: auto;
+      grid-column: 1;
+      overflow-y: visible;
+    }
+
+    .methodology-inner,
+    .about-inner,
+    .trends-inner {
+      padding: 32px 20px 64px;
+    }
+
+    .methodology-header h1,
+    .about-header h1,
+    .trends-header h1 {
+      font-size: 28px;
+    }
+
+    /* Methodology accordion details body: drop the indent on mobile */
+    .methodology-detail .details-body {
+      padding-left: 0;
+    }
+
+    /* Methodology tables: allow horizontal scroll */
+    .methodology-detail .details-body table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    /* Trends slides: tighter spacing */
+    .trends-slide {
+      min-height: auto;
+      padding: 24px 0;
+    }
+
+    .trends-slide img {
+      max-height: none;
+    }
+  }
+
+  /* ===== Responsive: small phones (≤480px) ===== */
+  @media (max-width: 480px) {
+    .nav-brand { font-size: 13px; }
+
+    .header h2 { font-size: 16px; }
+    .header .caption-period { font-size: 11px; }
+    .header .caption-source { font-size: 10px; }
+
+    .methodology-inner,
+    .about-inner,
+    .trends-inner {
+      padding: 24px 16px 56px;
+    }
+
+    .methodology-header h1,
+    .about-header h1,
+    .trends-header h1 {
+      font-size: 24px;
+    }
+
+    .methodology-summary h2,
+    .about-section h2 { font-size: 17px; }
+
+    .methodology-summary p,
+    .about-section p { font-size: 14px; }
+
+    /* Map labels at the smallest viewports: a small bump from the 768px sizes */
+    .region-label { font-size: 50px; }
+    .region-value { font-size: 64px; }
+    .region-value-secondary { font-size: 50px; }
+
+    /* Slope chart + dumbbell tighter on small phones */
+    .slope-chart {
+      max-width: 300px;
+    }
+
+    .dumbbell-list,
+    .dumbbell-legend {
+      max-width: 320px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <nav class="nav">
+      <div class="nav-brand">Healthy London</div>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#" class="is-active" data-view="map">Map</a></li>
+        <li><a href="#" data-view="trends">Insights</a></li>
+        <li><a href="#" data-view="methodology">Methodology</a></li>
+        <li><a href="#" data-view="about">About</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
+        <svg class="icon-menu" width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+          <path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" />
+        </svg>
+        <svg class="icon-close" width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+          <path d="M5 5l12 12M17 5L5 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" />
+        </svg>
+      </button>
+    </nav>
+
+    <aside class="sidebar">
+      <div class="sidebar-title">Filters</div>
+
+      <div class="filter-group">
+        <div class="filter-label">Gender</div>
+        <div class="toggle" data-filter="gender">
+          <button data-value="male" class="active">Male</button>
+          <button data-value="female">Female</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">Time period</div>
+        <div class="toggle" data-filter="period">
+          <button data-value="birth" class="active">At birth</button>
+          <button data-value="65">At age 65</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">Metric</div>
+        <div class="toggle" data-filter="metric">
+          <button data-value="hle" class="active">HLE</button>
+          <button data-value="gap">Gap</button>
+        </div>
+        <div class="filter-help">Gap = years in poor health (LE − HLE)</div>
+      </div>
+
+      <div class="filter-group sidebar-section">
+        <div class="filter-label">ICBs compared</div>
+        <div class="filter-help">HLE → LE per ICB · combined male + female</div>
+        <div class="dumbbell-legend">
+          <span class="legend-item"><span class="legend-dot hle"></span>HLE</span>
+          <span class="legend-item"><span class="legend-dot le"></span>LE</span>
+        </div>
+        <div class="dumbbell-list" id="dumbbell-list"></div>
+      </div>
+
+      <div class="filter-group sidebar-section">
+        <div class="filter-label">HLE: a decade of change</div>
+        <div class="filter-help">2011-13 → 2022-24 · combined male + female</div>
+        <div id="slope-chart"></div>
+      </div>
+
+    </aside>
+
+    <main class="main">
+      <div class="header">
+        <h2 id="metric-title">Healthy Life Expectancy at birth</h2>
+        <div class="caption">
+          <span class="caption-period">Period <strong>2022 to 2024</strong> — latest available</span>
+          <span class="caption-source">Source: ONS Healthy Life Expectancy (released Feb 2026) · Life Expectancy (released Dec 2025)</span>
+        </div>
+      </div>
+
+      <div class="map-wrap">
+        <svg class="map" viewBox="0 0 2238 1888" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <!-- South East London -->
+          <path id="south_east" class="region" data-region="south_east"
+            d="M1467,1743 C1485.7,1762.8 1501.1,1785.5 1519.2,1806.1 C1544.2,1799.5 1569.9,1794.9 1595.1,1788.3 C1600.8,1786.9 1603,1785 1601.9,1780 C1597.7,1759.5 1602.2,1738.5 1598.2,1718 C1597.2,1712.9 1597.9,1708.4 1603.6,1703.6 C1625.8,1685.1 1647.5,1666.1 1670.1,1648.1 C1681.6,1639 1678.1,1626.3 1679.7,1615 C1681.3,1603.8 1678.9,1592.2 1681.9,1581 C1682.3,1579.5 1683.5,1579.1 1683.8,1577.9 C1691.4,1578.2 1697.4,1582.5 1704,1585.1 C1707.7,1586.6 1711.3,1585.6 1715,1586 C1721.6,1586.8 1719.7,1580.9 1720.9,1577.9 C1734.1,1543.4 1746,1508.3 1760.4,1474.2 C1767.6,1457.1 1763,1441.4 1760.9,1425 C1759.6,1414.6 1757.5,1404.4 1756.1,1394 C1755.6,1390.4 1755.2,1386 1761,1386 C1763.8,1386 1765.6,1383.7 1768,1383 C1772.4,1381.7 1778.8,1381.7 1779.6,1376.9 C1780.6,1370.9 1781,1364.3 1778.1,1357.9 C1773.9,1348.7 1768.7,1339.9 1763.5,1331.3 C1759.4,1324.6 1759.1,1318.4 1760.2,1312 C1764.1,1289.4 1767.5,1266.8 1769.8,1244 C1770.2,1239.7 1772.6,1238.9 1775,1238.2 C1777.8,1237.4 1781,1237.7 1784,1238.1 C1798.6,1239.8 1799.3,1240 1801.8,1225 C1803.7,1213.4 1808.8,1202.7 1809.9,1191 C1810.2,1187.3 1813,1185.9 1815.1,1184.1 C1843,1159 1870.9,1133.9 1899.1,1109.1 C1903.1,1105.6 1904.5,1102 1904.1,1097 C1903.7,1093.4 1904.3,1089.6 1903.9,1086 C1902.6,1071.6 1904.7,1058.6 1915.8,1047.8 C1920.3,1043.6 1922.3,1037.1 1924.3,1031.3 C1918.9,1020.3 1908.6,1022.9 1901.1,1024.4 C1882,1028.1 1862.8,1031.4 1844.1,1036.3 C1820,1042.5 1809.5,1031.2 1806.2,1008 C1803.8,991.5 1803.8,974.6 1801.8,958 C1800.7,948.6 1796.4,940.9 1787.1,935.8 C1765.6,924 1743,915.2 1720,907 C1710.1,903.4 1700.2,906.7 1691.1,908.6 C1674.4,911.9 1657.7,914.8 1641,917.8 C1635.7,918.7 1631.2,920 1628.1,924 C1614.9,941.1 1598.7,955.4 1585.1,972.1 C1580.9,977.2 1576.1,978.1 1570,978.1 C1528.3,977.9 1486.7,978 1445,978.1 C1439.6,978.1 1435.3,976.9 1430.9,973.2 C1417,961.6 1402.6,950.7 1388.4,939.6 C1384.3,940.9 1382,942.7 1381.9,947 C1381.7,960.8 1381.9,974.5 1385.1,988 C1387.3,997.6 1388,1007.3 1388.8,1017 C1389.2,1020.8 1387.4,1024.6 1383,1026 C1378.4,1027.4 1373.6,1029.9 1369,1029.8 C1353.6,1029.3 1338.4,1032.7 1323,1032.3 C1315.8,1032.1 1309.2,1029.3 1302,1030 C1297.8,1030.4 1297.4,1026.5 1296,1024 C1288.6,1009.6 1285,994.1 1284,978 C1283.3,965.3 1280.2,952.8 1279.7,940 C1279.4,931.7 1271,929.4 1265,935 C1258,941.7 1252.8,950 1245.1,956.1 C1239.8,960.2 1235.4,959.8 1228.9,958.4 C1195.4,951.4 1164.9,935.4 1132,927 C1124.4,925 1116.7,924.1 1109,923.1 C1105.5,922.6 1103.7,924.3 1101.8,927.9 C1094.8,941 1091.8,955.5 1086.2,969.1 C1081.3,980.7 1077.7,992.9 1074.1,1005 C1072.2,1011.5 1066.6,1013.2 1062,1013.6 C1053.6,1014.4 1048.3,1018.7 1044,1025 C1032,1042.7 1020.7,1060.9 1007.8,1077.8 C997.7,1091.1 1001.8,1104 1007.3,1115.8 C1019.2,1141.3 1028,1167.8 1033.8,1195.1 C1040.7,1227.8 1039.8,1260.1 1021.6,1290.2 C1028.5,1301.2 1041.1,1299.8 1051.5,1304.7 C1061.1,1291 1073,1278.5 1079.4,1263.7 C1086.5,1247.1 1099,1248.5 1110.9,1250.4 C1128.3,1253.2 1145.8,1255.8 1163.1,1259.6 C1170.4,1261.2 1174.5,1264.1 1178.1,1269.9 C1186.5,1283.4 1195.1,1296.8 1204,1310 C1229.3,1347.4 1254.8,1384.6 1279.9,1422.1 C1285.7,1430.7 1294,1434.8 1303,1437.9 C1308.2,1439.6 1313.3,1441.9 1317.8,1444.4 C1326.1,1448.9 1322.9,1458.5 1321.4,1464.9 C1319.6,1472.6 1320.3,1478 1324.9,1484.1 C1341.1,1505.2 1356.8,1526.8 1373.2,1547.9 C1377.1,1553 1378.1,1558 1378.1,1564 C1377.9,1593.7 1378.5,1623.3 1377.8,1653 C1377.4,1672.2 1385.5,1689.2 1390.4,1706.9 C1396.9,1730.4 1405,1753.6 1412,1777 C1415,1787.4 1419,1789.1 1426.9,1781.9 C1440.4,1769.7 1452,1755.7 1466,1744" />
+
+          <!-- South West London -->
+          <path id="south_west" class="region" data-region="south_west"
+            d="M883,1590 C904,1603.3 924.5,1617.7 946.2,1629.6 C958.8,1636.5 963.4,1646.3 966.1,1659 C973.1,1691.7 980.7,1724.3 987.9,1757 C988.6,1760.2 989.5,1761.7 993,1762.2 C996.6,1762.6 1000.1,1764.7 1004,1764 C1020.7,1761 1032.1,1767.2 1041.4,1781.8 C1049.2,1794.2 1060.3,1804.7 1070.6,1816.8 C1083.4,1806.2 1096.2,1795.6 1109,1785 C1120.7,1775.3 1131.9,1765.1 1144.1,1756.2 C1154.1,1749 1156.4,1738.2 1159.9,1728 C1164.2,1715.3 1168.2,1702.5 1172.9,1690 C1175.3,1683.4 1179.7,1681.1 1186,1681 C1193.7,1680.9 1201.4,1680.4 1209,1681.1 C1221.9,1682.5 1232.7,1678.7 1243.2,1671.2 C1248.2,1667.6 1250.1,1664.2 1250.2,1658 C1250.4,1638.4 1257.2,1621 1269.9,1605.9 C1272.8,1602.5 1275.9,1601.6 1280,1602 C1287.4,1602.6 1294.5,1599.7 1302,1599.7 C1309.4,1599.6 1315.7,1601.3 1317.8,1608.1 C1324.5,1629.3 1341.1,1630.5 1360,1629.9 C1360,1605.7 1359.9,1581.3 1360.1,1557 C1360.1,1553.9 1358.7,1551.7 1356.9,1550.1 C1344.5,1539 1337.3,1524.3 1327.9,1511.1 C1323.1,1504.4 1319.3,1496.9 1312.1,1491.9 C1298.9,1482.9 1300.8,1470 1304,1456.7 C1299.5,1453.2 1294.6,1450.2 1289,1447.9 C1270.1,1440 1259.3,1423.3 1250.4,1406.8 C1229.4,1368 1205,1331.9 1177,1298 C1176.4,1297.3 1175.3,1296.8 1175.1,1296 C1170.2,1276.4 1153.2,1274.9 1137.9,1272.3 C1127.5,1270.5 1117.5,1267.3 1107,1265.9 C1100.8,1265 1096.6,1266.2 1092.9,1271.9 C1083,1286.9 1071.7,1301 1062.3,1316.2 C1057.9,1323.1 1054.2,1322.6 1047.9,1320.1 C1035.1,1315 1022,1310.6 1009,1306 C996.3,1301.6 995.4,1299.4 1002,1289 C1011.6,1273.7 1016.9,1257 1020.3,1239.1 C1025.9,1208.8 1015.7,1181.6 1006.8,1154.1 C1000.7,1135.1 993.1,1116.6 985.9,1098 C983.5,1091.7 983.6,1086.1 986.9,1079.9 C998.5,1058.2 1014.3,1039.3 1028.5,1018.3 C1015.6,1009.6 1001.8,1011.8 989.1,1016.3 C974.6,1021.5 961,1029.4 947,1036 C936.6,1040.8 938.3,1051 938.5,1059 C938.7,1069.9 934.6,1076.1 926.2,1082.2 C912.2,1092.4 899.4,1104.1 886,1115 C875.5,1123.6 870,1123.3 860,1114 C857.1,1111.2 854.5,1108.2 852,1105 C847.5,1099 841.8,1094.9 835,1092 C820.8,1086 810.8,1076.1 805.9,1061 C801,1045.9 795.1,1031.1 790.1,1016 C788.2,1010.1 787.6,1003.9 779,1005 C767.7,1006.3 760.3,1012.1 760.1,1021 C759.8,1033.3 760,1045.7 760,1058 C760,1071.5 753.9,1077.7 740,1078 C729.7,1078.1 719.3,1077.9 709,1078.1 C705.6,1078.2 701.7,1076.1 699.4,1081 C684.2,1069.7 677.4,1054.3 672,1038 C671.6,1036.7 671.7,1035.4 671.1,1034 C666,1020.3 666.1,1020.3 651,1023.9 C648.1,1024.6 645,1023.7 642,1024 C628.5,1025.4 620.5,1032 613.4,1044.7 C595.8,1076.4 580.4,1109.7 557.1,1138 C551.4,1144.8 542.4,1149.1 534.1,1145.7 C526.1,1142.5 517.9,1143.7 509.9,1142.5 C492,1140 474,1137.4 456,1134.7 C451.4,1134 446,1136.1 441.5,1131.3 C435,1138.7 427,1144.4 421.6,1153.1 C426.8,1164.4 436.1,1171.9 446.2,1177.7 C453.1,1181.7 452.5,1186.1 451,1192 C445.2,1214.9 431.7,1233.5 418,1252 C411.6,1260.7 405.6,1269.5 401.8,1279.9 C396.1,1295.2 401.2,1308.5 407,1322 C408.3,1324.9 409.5,1327.8 411.3,1329.3 C431.8,1328.1 447.6,1315.6 466.8,1309.8 C474.7,1315.3 480.7,1323.4 487,1331 C499,1345.6 511.2,1359.9 525.9,1372.2 C537.3,1381.7 550.1,1388.2 564.1,1391.6 C573.4,1393.9 579.1,1397.8 582.3,1406.9 C583.5,1410.2 584.9,1413.9 587,1417 C593.5,1426.3 589.5,1434.3 583.9,1442 C582.3,1444.2 580.3,1446.4 578,1447.9 C564.6,1457.1 560.4,1471 557.9,1486 C555.4,1501.3 550.9,1516.2 546.1,1531 C544.1,1537.5 542,1544.4 542.2,1551 C543.5,1581.5 536.7,1611.6 538,1642 C538,1643.1 537.7,1644.3 539.1,1645 C569.3,1650.2 602,1630.3 614.4,1603.2 C623.3,1583.6 630,1563.5 636.1,1543 C646.5,1508.3 666.9,1480.5 697,1459.9 C701,1457.2 704.6,1453.6 708,1450 C717.7,1439.6 730.1,1439.2 743,1440 C747.5,1440.3 750.8,1441.4 750,1447 C749.6,1450.1 752.6,1452.7 752,1456 C748.3,1474.7 758.5,1486.2 773,1494.9 C795.5,1508.4 801.3,1531.3 808.1,1554 C812.3,1567.9 812.9,1580.6 802.1,1592.1 C799.5,1594.8 797.9,1598.6 796,1602 C789.8,1613.4 790.2,1617.7 799,1627 C803.8,1631.9 809.3,1636.1 813.9,1641.1 C818.7,1646.2 822.1,1644.1 826,1640 C839.6,1626.3 853.3,1612.7 867,1599 C871.2,1594.8 876.2,1592.1 882,1591" />
+
+          <!-- North West London -->
+          <path id="north_west" class="region" data-region="north_west"
+            d="M164,711 C153.7,732.7 143.4,754.4 132.9,775.9 C131.6,778.5 132.2,780.7 132.1,783 C130.5,814.4 134.5,845.6 134.4,877 C134.3,888.2 139.4,899.1 143,910 C144.9,915.9 146.6,921.9 147.9,928 C150.2,938.7 142.2,945.9 137.8,953.9 C120,985.8 102,1017.6 87.1,1051.1 C85.9,1053.9 84.5,1056.7 83.8,1060 C82.2,1068.3 84.1,1072.3 92.8,1076.4 C127.6,1092.8 163.3,1107.2 198.1,1123.8 C205.3,1127.2 207.7,1131.6 208.1,1139 C209,1151.8 205.5,1164.2 205.8,1177 C205.9,1183.6 208.5,1186.9 214,1189 C240.5,1199.2 265.9,1212 292,1222.9 C321.7,1235.3 350.4,1249.9 380.9,1260.4 C386.9,1262.4 389.2,1261.7 392,1257 C404,1237.3 413.7,1216.4 421.7,1194.9 C423.5,1190.1 422.7,1184.2 417.2,1179.8 C412.2,1175.7 407,1171.9 402,1168 C387.9,1157.3 387,1149.2 399,1137 C405.6,1130.3 411.8,1123.2 419.9,1117.9 C436.5,1106.8 455.2,1108.7 472.9,1110.5 C492.7,1112.5 512.2,1117.4 532,1120 C539.1,1121 541.2,1116.2 544.2,1111.1 C557.9,1087.6 569.8,1063.2 583.8,1039.9 C598.1,1015.9 618.4,1000.5 645.1,994.5 C654.2,992.4 664.1,991.1 674,991.8 C681.6,992.4 683.6,997.7 686,1003 C690.1,1012.6 694.1,1022.3 698,1032 C702.6,1043.3 709.8,1049.3 723,1048.3 C731.4,1047.7 734.1,1044.5 734,1037 C734,1025.3 734,1013.7 734,1002 C734,986.4 735.4,985.4 750,979.8 C766.1,973.7 782.6,976.7 799,976.2 C804.9,976 808,980.9 810,986 C818,1006.7 825.4,1027.6 834.2,1047.9 C841.1,1063.8 855.8,1072.9 869,1083 C871.3,1084.7 873.4,1084 876,1083.1 C888.1,1078.9 897.9,1071.5 905.8,1061.9 C909.8,1057 910.9,1050.2 909.8,1044 C906.9,1027 913.3,1016.7 930,1011.8 C935.9,1010.1 941.5,1006.9 947,1004 C961.7,996 976,984.9 992.1,983 C1006.6,981.2 1022,980.7 1037,981.9 C1042.1,982.3 1045.8,982.4 1048.4,975.2 C1056.1,954.2 1065.4,933.8 1071.1,912 C1072.2,908.1 1071.6,904.7 1071.9,902.5 C1070,899.3 1068.2,899.7 1067,900.1 C1054.1,904.5 1045.2,897.2 1036,890.1 C1024.5,881.2 1013,872.2 1000.9,864.1 C990.8,857.4 988.5,847.8 988.1,837 C987.8,830.7 988,824.3 988,818 C987.9,805.7 980.8,798.1 969,795.8 C960,794.1 950.9,791.8 942,790.4 C926.3,787.9 912.2,794.3 900.1,804.1 C894,808.9 888.7,814.7 882.3,820.7 C871.8,807.4 864.7,792.2 856.1,778 C834.5,742.1 813.3,706 792,670 C788,663.2 783.5,660.3 774.9,663.7 C764.8,667.6 754.5,670.8 744.1,675.8 C729.5,664.1 721.8,647.1 713.7,630.1 C711.5,625.3 711.9,622 714,618 C716.7,613 719.2,607.9 722,603 C727,594.6 726.5,586.6 722.1,578 C716.2,566.5 709.8,555.6 701.1,545.9 C690.7,534.5 683.6,520.7 675.1,507.9 C657,480.6 639.7,452.6 622,425 C617.2,417.6 614,409.5 612,391 C610.5,394.1 604.8,390.6 599.9,387.2 C594.1,383.3 587.5,380.6 581,378.1 C572.5,374.9 564.4,375.3 555.9,379.9 C501.1,409.5 446,438.7 391,468 C384,471.7 376.6,474.8 370.1,479.1 C359.2,486.3 348.4,484.8 337,481 C316,474.2 296.4,463.8 275.1,457.7 C265.6,455 258.7,455.8 251.9,462.9 C245.3,469.9 237.9,476.3 231,483 C227.1,486.9 223.2,487.4 218,485.1 C200.7,477.5 186,466 172.2,453.7 C160,442.9 145.5,436.4 132,428 C125.9,424.2 124.3,427.9 121.8,432.9 C115.4,446 112.2,460.1 110.4,474 C107.5,497.2 104.3,520.5 104.9,544 C105.6,573.5 111.7,601.5 124.9,628.1 C138.4,655.2 151,682.7 164,710" />
+
+          <!-- North East London -->
+          <path id="north_east" class="region" data-region="north_east"
+            d="M2001,847 C2005.3,851.7 2009.6,856.4 2014,861 C2021.8,869.2 2032.1,870.7 2040.9,863.9 C2046.4,859.6 2050.7,854.8 2050.3,846 C2048.8,811.7 2051.1,819 2079.1,810.2 C2101,803.4 2123.6,798.2 2146,793.1 C2165.2,788.8 2184,783 2203,777.9 C2214.8,774.7 2215.5,772.1 2209,762 C2194,738.6 2178,716 2164,692 C2160.4,685.8 2155.6,683.4 2148,683.7 C2137,684.2 2126.1,686.2 2115,684.2 C2110.8,683.4 2108.8,682.8 2106.7,678.1 C2097.1,656.7 2088.9,634.7 2080.4,612.8 C2064.8,572.5 2048.4,532.5 2033.2,491.9 C2030.3,484.5 2026.6,478.7 2020.1,473.9 C1994.9,455.5 1969.9,436.8 1945.1,417.9 C1939.9,413.9 1934.4,413 1929,414.2 C1918.8,416.5 1908.5,419 1899,424 C1880.7,433.5 1862.3,442.5 1844.1,452.1 C1841,453.8 1838.1,454.1 1835,454 C1790.3,452.6 1745.7,457.3 1701,456 C1691.6,455.7 1685.1,461.7 1678.1,466.2 C1670.2,471.3 1662.9,477.6 1656.1,484.1 C1638,501.1 1617,513.9 1592.9,517.3 C1576,519.7 1558.4,521.2 1541,520 C1535.3,519.6 1531.8,514.9 1528.2,511.8 C1498.7,485.9 1468,461.4 1438,436.1 C1429.9,429.3 1428.4,422.1 1431.6,411.9 C1433.9,404.5 1431.6,395.9 1433.9,388 C1435.3,382.8 1431,381.6 1427,379.9 C1410,372.8 1391.9,371.6 1374,369 C1358.7,366.8 1358.1,366.7 1352.1,380 C1320.3,451.5 1284.6,521.1 1253.6,592.8 C1246.4,609.4 1241.2,627.1 1230.2,642.1 C1223.9,650.6 1216.9,654.7 1207,652 C1193.9,648.3 1180.3,647.8 1167,646.4 C1160.6,645.7 1154.6,643.2 1148,643.9 C1143.7,644.3 1140.9,644 1139.7,650 C1137.4,661.8 1133.3,673.3 1129.6,686.6 C1148.7,706 1171.8,722.5 1191.4,742.4 C1178.7,763.5 1165.8,783.6 1151.9,803 C1146.2,810.9 1146.9,818.5 1152.1,826 C1158.1,834.8 1164.5,843.4 1171,852 C1175.7,858 1179.7,864.3 1181.2,873 C1165,880.6 1146.2,881 1128.7,888.6 C1140.4,899.6 1154.9,901.9 1168.1,905.6 C1185.2,910.4 1202.1,916 1219.9,918.6 C1225.4,919.4 1228.7,919 1231.9,915.9 C1237.9,910.2 1243.2,903.9 1249,898 C1259.5,887.4 1273.7,885.9 1286,894 C1307.1,908 1315.8,929 1320.3,953 C1322.3,964 1321,975.1 1323.8,986.1 C1324.8,990.2 1325.9,991.7 1330,992.1 C1345.7,993.6 1351.2,986.7 1347,971 C1344.8,962.6 1342.6,954.3 1340.2,945.9 C1334.5,925.4 1339.8,914.7 1359,904 C1387,888.4 1397.7,889.7 1417.8,914.2 C1431.7,931 1447.1,940.4 1470,938.4 C1496.6,935.9 1523.3,941.3 1550,940.2 C1557.4,939.8 1563.1,938.5 1568.2,932.2 C1579.6,918 1592.9,905.3 1603.7,890.8 C1610.7,881.2 1619.6,877.7 1630,876.1 C1646.3,873.7 1662.7,872.3 1679,869.9 C1692.7,867.9 1706.3,865.8 1720,863.8 C1727.8,862.7 1734.5,865.2 1740.9,868.2 C1770.4,881.9 1800.1,895.2 1830,908.1 C1836.3,910.8 1839.4,915.3 1840.3,923 C1842.5,940.3 1845.9,957.6 1848.2,975 C1849.2,983 1854.5,985.6 1866,986 C1878.9,986.4 1891.3,982.1 1904,981.3 C1918.8,980.4 1925.8,971.9 1932.2,960.1 C1942.6,940.9 1954.2,922.3 1974,911 C1985.8,904.3 1989.6,893.4 1992.1,881 C1994.4,870 1996.2,858.7 2000,848" />
+
+          <!-- North Central London -->
+          <path id="north_central" class="region" data-region="north_central"
+            d="M1172,745 C1154.7,730 1137.7,714.5 1119.8,700.2 C1112.6,694.5 1111,689.6 1113.8,680.9 C1119.5,662.5 1124,643.7 1129.1,624.7 C1138.8,621.6 1148.5,625.3 1157.9,626.5 C1170.3,628.1 1182.7,629.6 1195,632 C1196,632.2 1197,631.9 1198,632 C1217.3,633.9 1217.5,634 1225.9,617 C1238.6,591.3 1247.7,564.2 1259.3,538.1 C1271.7,510.2 1285.1,482.7 1298,455 C1314.5,419.6 1331.3,384.3 1348.2,349.1 C1349.2,347 1350.2,345.3 1350,343 C1348.5,321.6 1352.3,300.4 1352.2,279 C1352.2,258.3 1354,237.7 1355,217 C1355,215.6 1355.7,214 1352.7,212.2 C1333.2,209 1312,208.3 1291,205.9 C1269.4,203.4 1247.7,201.6 1226,199.8 C1216.4,199 1207.6,194 1199.1,189.8 C1174.5,177.5 1148.4,168.8 1123.9,156.1 C1120.1,154.1 1116.1,154.1 1110.9,155.6 C1080.8,163.9 1051.3,174.3 1021.1,182.5 C1011.9,185 1004.2,182 996.1,181.3 C991.5,180.9 985.8,181.3 980.8,178.3 C975.8,175.3 972,180.2 969,184 C948.6,210.6 928.4,237.4 907.9,263.9 C904.6,268.2 902.1,273.3 896.7,276.5 C885.6,268.1 874.6,259.7 863.1,250.9 C857.1,260.5 850.6,268.8 846.3,278.1 C842.2,286.9 835.5,290.8 827,291.9 C799.7,295.3 773.2,302.4 746,306.2 C740,307 734.5,308.8 733.5,318 C732.1,331 727.4,343.8 726.1,357 C725.8,359.6 721.5,359.7 723.7,363.8 C715.7,360.2 708.6,357.2 702,353 C698.4,350.8 694.8,350.6 691,353 C671.4,365.4 651.6,377.6 632,390 C629,391.9 626.5,394.5 624.4,396.2 C628.1,410.9 636.3,420.7 644,431 C675.7,473.8 701.7,520.3 732,564 C734.9,568.2 736.6,573.4 740.1,576.9 C747.7,584.4 746.5,591.9 742,600 C740.9,602 740,604 739,606 C736,611.7 728.7,617.8 730.6,622.8 C734.5,632.9 739.2,643.2 746.1,651.9 C749.1,655.7 753.9,654.4 758,653 C769,649.3 780,645.6 792,641.5 C823.4,692.8 854.8,744.1 886.1,795.4 C895.4,789.9 903.3,783.9 910.7,777.7 C918.5,771.1 925.3,768.9 935,771.8 C950,776.4 965.7,776.9 981,780 C987.2,781.2 992,783.9 995.1,789.9 C1003,805.1 1009.2,820.4 1008.1,838 C1007.6,846.5 1010.3,853.5 1018.9,858.2 C1028.1,863.3 1036.7,869.6 1044.9,876.1 C1053.1,882.7 1061.1,882.4 1071.1,880.4 C1095.8,875.4 1120.3,869.4 1145,864.1 C1149,863.3 1152.7,862.4 1156.3,860 C1151.1,847.4 1144.4,835.7 1134.9,826.1 C1126.3,817.5 1127,808.5 1132.1,799 C1142.5,779.6 1155.4,761.8 1171,746" />
+        </svg>
+
+        <div class="tooltip" id="tooltip"></div>
+      </div>
+
+      <section class="detail-panel">
+        <div class="detail-col" id="detail-trend"></div>
+        <div class="detail-col" id="detail-insight-1"></div>
+        <div class="detail-col" id="detail-insight-2"></div>
+      </section>
+    </main>
+
+    <main class="trends" hidden aria-labelledby="trends-title">
+      <div class="trends-inner">
+        <header class="trends-header">
+          <h1 id="trends-title">Insights</h1>
+          <p class="trends-lede">Seven slides exploring healthy life expectancy across London — scroll to advance.</p>
+        </header>
+
+        <section class="trends-slide">
+          <div class="trends-slide-num">01 / 07 &middot; Cover</div>
+          <img src="slides/01-cover.jpg" alt="Cover slide" loading="lazy" />
+        </section>
+
+        <section class="trends-slide">
+          <div class="trends-slide-num">02 / 07 &middot; London &mdash; women</div>
+          <img src="slides/02-london-women.jpg" alt="London-wide women's insight" loading="lazy" />
+        </section>
+
+        <section class="trends-slide">
+          <div class="trends-slide-num">03 / 07 &middot; North West London</div>
+          <img src="slides/03-nw.jpg" alt="North West London insight" loading="lazy" />
+        </section>
+
+        <section class="trends-slide">
+          <div class="trends-slide-num">04 / 07 &middot; North Central London</div>
+          <img src="slides/04-nc.jpg" alt="North Central London insight" loading="lazy" />
+        </section>
+
+        <section class="trends-slide">
+          <div class="trends-slide-num">05 / 07 &middot; North East London</div>
+          <img src="slides/05-ne.jpg" alt="North East London insight" loading="lazy" />
+        </section>
+
+        <section class="trends-slide">
+          <div class="trends-slide-num">06 / 07 &middot; South East London</div>
+          <img src="slides/06-se.jpg" alt="South East London insight" loading="lazy" />
+        </section>
+
+        <section class="trends-slide">
+          <div class="trends-slide-num">07 / 07 &middot; South West London</div>
+          <img src="slides/07-sw.jpg" alt="South West London insight" loading="lazy" />
+        </section>
+      </div>
+    </main>
+
+    <main class="methodology" hidden aria-labelledby="meth-title">
+      <div class="methodology-inner">
+        <header class="methodology-header">
+          <h1 id="meth-title">Methodology</h1>
+        </header>
+
+        <section class="methodology-summary">
+          <h2>About this data — a short summary</h2>
+          <p>This visualization uses official statistics from the UK Office for National Statistics (ONS) to explore healthy life expectancy in London. Four ONS publications — covering life expectancy, healthy life expectancy, and population estimates — were combined into a single dataset focused on the five NHS Integrated Care Boards covering Greater London, across twelve 3-year periods from 2011–2013 to 2022–2024. All source data is publicly available and used under the Open Government Licence.</p>
+
+          <p>A few honest caveats are worth knowing as you explore the app. Healthy life expectancy is built partly from a survey that asks people to rate their own health, so the figures carry some uncertainty. The 2018–2020, 2019–2021, and 2020–2022 periods are affected by the COVID-19 pandemic, which temporarily lowered life expectancy. And ONS adjusted its methodology slightly for the most recent (2022–2024) figures because the underlying survey sample has shrunk; the figure remains the official estimate, but is not strictly comparable to earlier periods. The full methodology below covers these and other choices in detail.</p>
+        </section>
+
+        <section class="methodology-detail">
+          <h2>Detailed methodology</h2>
+
+          <details>
+            <summary>1. Purpose</summary>
+            <div class="details-body">
+              <p>This document describes how the consolidated dataset (<code>london_icb_dataset.xlsx</code>) was built from publicly-available ONS sources, what decisions were made along the way, and what was deliberately deferred to future iterations. It is intended as a transparent record for the development team and any third party reviewing the analysis.</p>
+              <p>The headline question the app is designed to address is the gap between the quantity and quality of life: people may be living longer, but how many of those years are spent in good health? The dataset structures published ONS estimates so that this comparison can be made cleanly across the five London ICBs and over time.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>2. Source data</summary>
+            <div class="details-body">
+              <p>Four ONS publications were used. All are accredited official statistics, released under the Open Government Licence v3.0.</p>
+              <table>
+                <thead>
+                  <tr><th>Dataset</th><th>Used for</th><th>Released</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Life expectancy for local areas of the UK<br><span class="cell-meta">3-year periods, by ICB</span></td>
+                    <td>Period LE point estimates and 95% confidence intervals across 12 periods.</td>
+                    <td>10 Dec 2025</td>
+                  </tr>
+                  <tr>
+                    <td>Healthy life expectancy, UK<br><span class="cell-meta">3-year periods, by ICB</span></td>
+                    <td>HLE point estimates, confidence intervals, and ONS-published proportion of life in good health.</td>
+                    <td>19 Feb 2026</td>
+                  </tr>
+                  <tr>
+                    <td>Population estimates, mid-2022 to mid-2024<br><span class="cell-meta">2024 ICB boundaries, single year of age and sex</span></td>
+                    <td>Sex- and age-specific population weights for the 2022–2024 period.</td>
+                    <td>7 Nov 2025</td>
+                  </tr>
+                  <tr>
+                    <td>Population estimates, mid-2011 to mid-2022<br><span class="cell-meta">2024 ICB boundaries (back-cast)</span></td>
+                    <td>Sex- and age-specific population weights for all earlier periods, period-matched.</td>
+                    <td>25 Nov 2024</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p>LE and HLE files include all five London ICBs natively. Population estimates were aggregated from Sub-ICB Locations to ICB level — ONS publishes finer-grained Sub-ICB rows that sum cleanly to ICB totals.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>3. Scope decisions</summary>
+            <div class="details-body">
+              <h3>Geography: London ICBs only</h3>
+              <p>The five NHS Integrated Care Boards covering Greater London were selected as the geographic frame. ICBs are a meaningful unit for NHS planners and local authority partnerships, and the constraint of five comparable geographies makes the storytelling tractable for a general public audience. National and regional comparisons are deferred to future iterations.</p>
+
+              <h3>Time: twelve 3-year overlapping periods (2011–13 through 2022–24)</h3>
+              <p>ONS publishes LE and HLE on overlapping 3-year periods to smooth small-area volatility. We use all 12 periods that have matching LE and HLE data, giving a thirteen-year span. Successive periods share two of three years and are therefore auto-correlated; this should be reflected in trend visualisations.</p>
+              <p>The single-year LE file was reviewed and held back. ONS itself flags single-year subnational estimates as "less robust" because of annual mortality fluctuations.</p>
+
+              <h3>Cohort vs period life expectancy</h3>
+              <p>Two ONS cohort-LE projection files were reviewed and excluded. They are UK-level only — there is no subnational breakdown — and mixing cohort LE (a forecast incorporating assumed future mortality improvements) with period HLE (a snapshot of current conditions) invites a category-error comparison. Period LE is the correct comparator for period HLE.</p>
+
+              <h3>Demographics: sex and two age groups</h3>
+              <p>Both sexes are included throughout. For the headline view, two age groups are surfaced: at birth (ONS age group "&lt;1") and at age 65 (ONS age group "65 to 69"). These are the two metrics ONS itself leads with, and they map onto the two policy framings the public most readily understands: "how long will I live?" and "how good will my retirement be?"</p>
+              <p>The full 20-age-group structure is preserved in the underlying dataset for future use.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>4. How the dataset was synthesised</summary>
+            <div class="details-body">
+              <h3>Joining LE and HLE</h3>
+              <p>The LE and HLE source files share an identical row structure (period × area × sex × age). They were filtered to the five London ICBs and the 12 overlapping periods, then inner-joined on (period, area code, sex, age group). Every join key matched.</p>
+
+              <h3>Computing the years-in-poor-health gap</h3>
+              <p>The headline gap metric is computed at row level as <code>LE − HLE</code>, rounded to one decimal. ONS publishes both LE and HLE to one decimal place, so this is the most precise calculation available.</p>
+              <p>A back-calculation from the published Proportion (%) column was rejected because Proportion is rounded by ONS to whole percent, propagating roughly ±0.5 years of error into any derived gap.</p>
+
+              <h3>The London ICBs average reference</h3>
+              <p>A single derived row, "London ICBs average," is included for each period × sex × age combination. It is a population-weighted mean of the five published ICB-level estimates, with weights that are <strong>period-matched</strong>, <strong>sex-matched</strong>, and <strong>age-relevant</strong> ("at birth" uses total population of that sex; "at 65" uses population aged 65 and over).</p>
+              <p><strong>Important caveat.</strong> This is a weighted mean of published outputs, not a pooled life-table calculation from underlying death and population counts. For closely-similar London ICBs the difference is expected to be small (likely under 0.2 years), but the value is labelled "London ICBs average" rather than as a pooled "London-wide" figure.</p>
+
+              <h3>Methodology flags</h3>
+              <p>Two boolean flags are added to every row of the dataset, to be surfaced visually in the app:</p>
+              <table>
+                <thead>
+                  <tr><th>Flag</th><th>True for</th><th>Why it matters</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>covid_period_flag</code></td>
+                    <td>2018–2020, 2019–2021, 2020–2022</td>
+                    <td>These periods incorporate excess pandemic mortality. London was hit hard in spring 2020, so LE in particular dips visibly.</td>
+                  </tr>
+                  <tr>
+                    <td><code>hle_methodology_flag</code></td>
+                    <td>2022–2024</td>
+                    <td>ONS applied an interim methodological fix to subnational HLE in this release because the Annual Population Survey sample size has fallen. The figure is the official ONS estimate but is not strictly comparable to earlier-period methodology.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details>
+            <summary>5. Output structure</summary>
+            <div class="details-body">
+              <p>The deliverable is a single Excel workbook (<code>london_icb_dataset.xlsx</code>) with five sheets:</p>
+              <table>
+                <thead>
+                  <tr><th>Sheet</th><th>Purpose</th><th>Rows</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Cover</td><td>Title, contents, source list, licence</td><td>—</td></tr>
+                  <tr><td>Notes</td><td>Definitions, coverage, methodology flags, derived figures, CI notes</td><td>—</td></tr>
+                  <tr><td>Table A — Headline</td><td>Primary fact table read by the app: 6 areas (5 ICBs + London average) × 12 periods × 2 sexes × 2 age groups</td><td>288</td></tr>
+                  <tr><td>Table B — Full age</td><td>Held in reserve for future iterations: 5 ICBs × 12 periods × 2 sexes × 20 age groups</td><td>2,400</td></tr>
+                  <tr><td>Table C — Area metadata</td><td>Static reference: codes, names, latest population, borough counts, geographic display order</td><td>6</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details>
+            <summary>6. Key decisions and trade-offs</summary>
+            <div class="details-body">
+              <table>
+                <thead>
+                  <tr><th>Decision</th><th>Reason</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Period (3-year) data, not single-year</td>
+                    <td>Single-year subnational LE is too volatile for a public audience. ONS itself cautions against it. 3-year periods also align exactly with how HLE is published, enabling clean row-level joins.</td>
+                  </tr>
+                  <tr>
+                    <td>Period LE, not cohort LE</td>
+                    <td>Cohort LE is a UK-level forecast incorporating assumed future mortality improvements. Comparing it to ICB-level period HLE would conflate apples and oranges.</td>
+                  </tr>
+                  <tr>
+                    <td>Two age groups initially, twenty in reserve</td>
+                    <td>Twenty age groups in a public-facing dropdown is intimidating. "At birth" and "at age 65" are the two framings most readily understood.</td>
+                  </tr>
+                  <tr>
+                    <td>London ICBs average as derived reference</td>
+                    <td>Without any comparator, ICB-level numbers are unanchored. A London-5 weighted mean keeps the geography strictly to ICBs while providing the contextual reference the storytelling needs.</td>
+                  </tr>
+                  <tr>
+                    <td>Gap = LE − HLE, computed at row level</td>
+                    <td>Most precise approach available given LE and HLE both rounded to one decimal. Back-calculating from the rounded Proportion column would have been less precise.</td>
+                  </tr>
+                  <tr>
+                    <td>Confidence intervals retained, not collapsed</td>
+                    <td>CIs are wide at ICB level — typically several years. Hiding them risks implying false precision in trend charts.</td>
+                  </tr>
+                  <tr>
+                    <td>Methodology flags as columns, not as filters</td>
+                    <td>COVID-affected periods and the 2022–2024 HLE methodology break are flagged in every row but not removed. Hiding them would create its own distortion.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details>
+            <summary>7. Deferred to future iterations</summary>
+            <div class="details-body">
+              <p>The following items were considered and deliberately deferred:</p>
+              <ul>
+                <li>England and ONS London region as additional benchmark reference lines.</li>
+                <li>Borough-level (local authority) drill-down — would let users see HLE/LE at finer granularity within an ICB.</li>
+                <li>Cohort LE as a "national outlook" panel, properly framed as forward-looking UK context.</li>
+                <li>Single-year LE for a "year-of-pandemic-shock" view.</li>
+                <li>Full 20-age-group structure exposed in the UI.</li>
+                <li>Bisected map (each ICB shape divided into M/F halves, coloured independently).</li>
+                <li>A reproducible Python regeneration script, so future-year ONS releases can be incorporated without manual rework.</li>
+                <li>Animation on metric/sex/age toggles — would help users perceive change rather than just see new states.</li>
+                <li>Mobile-responsive layout considerations.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>8. Limitations and honest caveats</summary>
+            <div class="details-body">
+              <p><strong>Subnational HLE has wide confidence intervals.</strong> Year-on-year movements within a single ICB are often within the noise. The app must surface uncertainty (shaded sparkline band) to avoid overstating trend changes.</p>
+
+              <p><strong>Overlapping 3-year periods are not independent observations.</strong> A "trend" across 12 successive periods is smoother than the underlying year-on-year change because successive periods share two of three years. This is normal practice for small-area mortality but should not be treated as 12 independent data points.</p>
+
+              <p><strong>The London ICBs average is an approximation.</strong> It is a population-weighted mean of published outputs, not a pooled life-table calculation. For closely-similar London ICBs the difference is expected to be small but is documented in the data dictionary.</p>
+
+              <p><strong>HLE relies on self-reported general health.</strong> HLE incorporates Annual Population Survey responses to a single self-rated health question. It is not based on clinical assessment. Cultural differences in how people rate their own health can affect cross-area comparison; this is an inherent feature of the metric.</p>
+
+              <p><strong>Boundaries are 2024 ICBs, back-cast for earlier years.</strong> ICBs were established in 2022. ONS has back-cast population estimates and HLE/LE figures to 2024 ICB boundaries. The geography of the published numbers is therefore consistent across the time series, but the institutional ICBs themselves did not exist before 2022.</p>
+            </div>
+          </details>
+        </section>
+
+        <footer class="methodology-footer">
+          <p>Source data © Crown copyright. Released under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener">Open Government Licence v3.0</a>.</p>
+        </footer>
+      </div>
+    </main>
+
+    <main class="about" hidden aria-labelledby="about-title">
+      <div class="about-inner">
+        <header class="about-header">
+          <h1 id="about-title">About</h1>
+        </header>
+
+        <section class="about-section">
+          <h2>About the Creator: Nazia Parvez</h2>
+          <p>I am a multidisciplinary designer and consultant specializing in the intersection of human-centered design and emerging technology. Drawing on an extensive background in global healthcare and digital health strategy, I have led service design and product strategy for organizations including Babylon Health (e-Med), the National Health Service (NHS), and the Centre for Population Health.</p>
+
+          <p>My work focuses on translating complex data into intuitive, storytelling-led experiences. This application was developed as a "maker" project to explore the potential of AI-native development in health analytics. Utilizing Claude and Claude Code for the research, data analysis, and core engineering, I combined my background in UX research and product design with generative AI workflows to move from raw public health data to a functional interactive interface. All visual assets and interface refinements were produced through custom AI image-generation pipelines.</p>
+
+          <p>I am a lead-level practitioner focused on how AI can streamline the bridge between rigorous research and accessible, impactful design.</p>
+        </section>
+
+        <section class="about-section">
+          <h2>Connect &amp; Collaborate</h2>
+          <p>I am always open to discussing the intersection of health data, AI-native development, and human-centered design. Whether you have questions about the methodology of this app or potential collaborations, feel free to reach out.</p>
+          <ul class="about-links">
+            <li><a href="https://www.linkedin.com/in/naziaparvez/" target="_blank" rel="noopener noreferrer">LinkedIn — naziaparvez</a></li>
+          </ul>
+        </section>
+      </div>
+    </main>
+  </div>
+
+<script>
+  // ONS figures (years), period 2022 to 2024.
+  // Source: Table A — Headline of london_icb_dataset.xlsx
+  // Each leaf holds { hle, le, gap } where gap = le − hle (years in poor health).
+  const PERIOD_LABEL = "2022 to 2024";
+  const data = {
+    male: {
+      birth: {
+        north_west:    { hle: 63.3, le: 80.7, gap: 17.4 },
+        north_central: { hle: 60.8, le: 81.0, gap: 20.2 },
+        north_east:    { hle: 62.0, le: 79.7, gap: 17.7 },
+        south_east:    { hle: 62.4, le: 80.0, gap: 17.6 },
+        south_west:    { hle: 66.1, le: 81.0, gap: 14.9 }
+      },
+      "65": {
+        north_west:    { hle: 10.4, le: 19.8, gap:  9.4 },
+        north_central: { hle:  9.4, le: 19.9, gap: 10.5 },
+        north_east:    { hle:  9.6, le: 18.7, gap:  9.1 },
+        south_east:    { hle:  9.9, le: 19.0, gap:  9.1 },
+        south_west:    { hle: 11.3, le: 19.6, gap:  8.3 }
+      }
+    },
+    female: {
+      birth: {
+        north_west:    { hle: 63.5, le: 85.4, gap: 21.9 },
+        north_central: { hle: 60.2, le: 85.3, gap: 25.1 },
+        north_east:    { hle: 61.8, le: 83.7, gap: 21.9 },
+        south_east:    { hle: 62.3, le: 84.0, gap: 21.7 },
+        south_west:    { hle: 66.6, le: 85.1, gap: 18.5 }
+      },
+      "65": {
+        north_west:    { hle: 10.8, le: 22.8, gap: 12.0 },
+        north_central: { hle:  9.5, le: 22.8, gap: 13.3 },
+        north_east:    { hle: 10.0, le: 21.5, gap: 11.5 },
+        south_east:    { hle: 10.2, le: 21.7, gap: 11.5 },
+        south_west:    { hle: 11.9, le: 22.4, gap: 10.5 }
+      }
+    }
+  };
+
+  const REGION_LABELS = {
+    north_west:    { name: "NW London", fullName: "North West London",    cx: 420,  cy: 770,  pop: "Pop. 2.2M" },
+    north_central: { name: "NC London", fullName: "North Central London", cx: 1030, cy: 420,  pop: "Pop. 1.4M" },
+    north_east:    { name: "NE London", fullName: "North East London",    cx: 1700, cy: 640,  pop: "Pop. 2.1M" },
+    south_west:    { name: "SW London", fullName: "South West London",    cx: 750,  cy: 1240, pop: "Pop. 1.5M" },
+    south_east:    { name: "SE London", fullName: "South East London",    cx: 1500, cy: 1240, pop: "Pop. 1.8M" }
+  };
+
+  // Continuous color interpolation between two endpoints.
+  // Two ramps: green for HLE/LE (darker = higher = better),
+  // coral for the Gap (darker = higher = worse).
+  const COLOR_RAMPS = {
+    green: { start: [155, 197, 168], end: [ 31,  82,  52] }, // #9bc5a8 → #1f5234
+    coral: { start: [240, 195, 178], end: [196,  71,  52] }  // #f0c3b2 → #c44734
+  };
+
+  const METRIC_TO_RAMP = { hle: "green", le: "green", gap: "coral" };
+
+  // Domains for the choropleth, pooled across genders within each age group
+  // so toggling Male/Female keeps colors comparable.
+  // `invert: true` for the gap so that LOWER values render darker (better outcome).
+  // Source: full ONS range for 2022 to 2024 across the 5 London ICBs.
+  const DOMAINS = {
+    birth: {
+      hle: { min: 60.2, max: 66.6, invert: false },
+      le:  { min: 79.7, max: 85.4, invert: false },
+      gap: { min: 14.9, max: 25.1, invert: false }
+    },
+    "65": {
+      hle: { min:  9.4, max: 11.9, invert: false },
+      le:  { min: 18.7, max: 22.8, invert: false },
+      gap: { min:  8.3, max: 13.3, invert: false }
+    }
+  };
+
+  const METRIC_LABELS = {
+    hle: { short: "HLE",  long: "Healthy Life Expectancy" },
+    le:  { short: "LE",   long: "Life Expectancy" },
+    gap: { short: "Gap",  long: "Years in poor health" }
+  };
+
+  // Time-series HLE & LE per region across all 12 ONS periods (2011-13 → 2022-24).
+  // Tuple format: [period_midpoint_year, hle, le].
+  const TRENDS = {
+    male: {
+      birth: {
+        north_west:    [[2012,63.9,80.3],[2013,64.6,80.6],[2014,64.6,80.7],[2015,63.8,80.7],[2016,63.7,80.7],[2017,64.5,80.7],[2018,63.0,80.8],[2019,62.6,80.0],[2020,63.3,79.4],[2021,63.4,79.3],[2022,65.1,80.0],[2023,63.3,80.7]],
+        north_central: [[2012,63.8,80.3],[2013,65.1,80.5],[2014,65.0,80.4],[2015,63.9,80.5],[2016,64.4,80.5],[2017,63.9,80.7],[2018,63.2,80.8],[2019,62.9,80.0],[2020,64.1,79.5],[2021,63.0,79.4],[2022,62.9,80.3],[2023,60.8,81.0]],
+        north_east:    [[2012,60.8,78.9],[2013,61.1,79.0],[2014,61.8,79.1],[2015,62.2,79.1],[2016,62.9,79.1],[2017,62.8,79.4],[2018,62.6,79.6],[2019,62.6,78.7],[2020,62.5,78.0],[2021,63.2,77.9],[2022,62.4,78.8],[2023,62.0,79.7]],
+        south_east:    [[2012,63.8,79.3],[2013,63.2,79.6],[2014,63.6,79.5],[2015,63.4,79.5],[2016,63.9,79.5],[2017,63.7,79.7],[2018,63.5,79.8],[2019,63.4,79.4],[2020,63.7,79.1],[2021,64.1,79.1],[2022,63.0,79.6],[2023,62.4,80.0]],
+        south_west:    [[2012,65.2,80.3],[2013,65.9,80.6],[2014,66.0,80.7],[2015,65.5,80.7],[2016,65.6,80.8],[2017,66.4,80.8],[2018,66.9,80.9],[2019,66.6,80.3],[2020,66.0,80.1],[2021,67.0,80.1],[2022,66.0,80.6],[2023,66.1,81.0]]
+      },
+      "65": {
+        north_west:    [[2012, 9.6,19.3],[2013,10.1,19.4],[2014,10.1,19.4],[2015, 9.6,19.5],[2016, 9.8,19.5],[2017,10.2,19.6],[2018, 9.7,19.7],[2019, 9.7,19.1],[2020,10.1,18.7],[2021, 9.9,18.6],[2022,11.0,19.2],[2023,10.4,19.8]],
+        north_central: [[2012, 9.6,19.2],[2013,10.3,19.3],[2014,10.2,19.2],[2015, 9.6,19.3],[2016,10.0,19.3],[2017, 9.9,19.4],[2018, 9.7,19.6],[2019, 9.7,19.0],[2020,10.3,18.7],[2021, 9.8,18.7],[2022,10.0,19.3],[2023, 9.4,19.9]],
+        north_east:    [[2012, 8.4,18.3],[2013, 8.7,18.3],[2014, 8.9,18.3],[2015, 8.9,18.3],[2016, 9.3,18.2],[2017, 9.4,18.4],[2018, 9.3,18.5],[2019, 9.4,17.7],[2020, 9.4,17.3],[2021, 9.5,17.3],[2022, 9.6,18.1],[2023, 9.6,18.7]],
+        south_east:    [[2012, 9.5,18.4],[2013, 9.5,18.6],[2014, 9.6,18.5],[2015, 9.4,18.6],[2016, 9.8,18.5],[2017, 9.7,18.6],[2018, 9.7,18.6],[2019, 9.9,18.3],[2020,10.1,18.2],[2021,10.2,18.2],[2022,10.1,18.6],[2023, 9.9,19.0]],
+        south_west:    [[2012,10.0,18.9],[2013,10.5,19.0],[2014,10.5,19.1],[2015,10.2,19.2],[2016,10.5,19.3],[2017,10.9,19.3],[2018,11.1,19.4],[2019,11.1,18.9],[2020,10.9,18.8],[2021,11.2,18.8],[2022,11.1,19.3],[2023,11.3,19.6]]
+      }
+    },
+    female: {
+      birth: {
+        north_west:    [[2012,64.1,84.3],[2013,64.7,84.5],[2014,64.8,84.6],[2015,64.5,84.7],[2016,64.0,84.6],[2017,64.6,84.7],[2018,63.1,84.8],[2019,63.9,84.4],[2020,64.2,84.1],[2021,63.6,84.2],[2022,65.6,84.8],[2023,63.5,85.4]],
+        north_central: [[2012,64.2,84.4],[2013,65.5,84.4],[2014,65.4,84.4],[2015,64.8,84.6],[2016,64.9,84.6],[2017,63.9,84.8],[2018,63.2,84.8],[2019,64.1,84.5],[2020,65.4,84.3],[2021,63.1,84.2],[2022,62.9,84.8],[2023,60.2,85.3]],
+        north_east:    [[2012,60.9,83.1],[2013,61.1,83.2],[2014,61.7,83.1],[2015,62.8,83.2],[2016,63.1,83.2],[2017,62.7,83.4],[2018,62.8,83.6],[2019,63.8,83.0],[2020,63.5,82.5],[2021,63.3,82.3],[2022,62.3,82.9],[2023,61.8,83.7]],
+        south_east:    [[2012,64.3,83.6],[2013,63.2,83.6],[2014,63.9,83.6],[2015,64.4,83.6],[2016,64.6,83.9],[2017,63.9,83.9],[2018,63.9,84.1],[2019,64.6,83.6],[2020,64.5,83.4],[2021,64.1,83.3],[2022,62.7,83.6],[2023,62.3,84.0]],
+        south_west:    [[2012,65.4,83.9],[2013,65.9,84.0],[2014,66.0,84.0],[2015,66.2,84.2],[2016,65.9,84.2],[2017,66.7,84.4],[2018,67.5,84.5],[2019,68.1,84.4],[2020,67.1,84.3],[2021,67.5,84.4],[2022,66.2,84.7],[2023,66.6,85.1]]
+      },
+      "65": {
+        north_west:    [[2012,10.2,22.1],[2013,10.5,22.1],[2014,10.6,22.1],[2015,10.5,22.1],[2016,10.4,22.1],[2017,10.6,22.2],[2018,10.3,22.3],[2019,10.8,21.9],[2020,11.0,21.7],[2021,11.0,21.7],[2022,11.5,22.3],[2023,10.8,22.8]],
+        north_central: [[2012,10.4,22.1],[2013,10.9,22.2],[2014,10.9,22.1],[2015,10.6,22.2],[2016,10.7,22.1],[2017,10.3,22.3],[2018,10.4,22.4],[2019,10.8,22.1],[2020,11.5,21.9],[2021,10.8,21.8],[2022,10.5,22.3],[2023, 9.5,22.8]],
+        north_east:    [[2012, 8.9,21.1],[2013, 9.0,21.1],[2014, 9.3,21.0],[2015, 9.7,21.0],[2016, 9.9,21.0],[2017, 9.8,21.2],[2018,10.0,21.2],[2019,10.5,20.7],[2020,10.4,20.4],[2021,10.5,20.3],[2022,10.0,20.8],[2023,10.0,21.5]],
+        south_east:    [[2012,10.2,21.4],[2013, 9.8,21.4],[2014,10.1,21.4],[2015,10.4,21.3],[2016,10.5,21.5],[2017,10.2,21.5],[2018,10.6,21.7],[2019,10.9,21.3],[2020,11.1,21.2],[2021,11.1,21.1],[2022,10.4,21.3],[2023,10.2,21.7]],
+        south_west:    [[2012,10.5,21.6],[2013,10.8,21.6],[2014,10.9,21.6],[2015,11.1,21.7],[2016,11.0,21.8],[2017,11.3,21.9],[2018,12.0,22.0],[2019,12.3,21.8],[2020,12.0,21.7],[2021,12.3,21.7],[2022,11.6,22.1],[2023,11.9,22.4]]
+      }
+    }
+  };
+
+  const state = { gender: "male", period: "birth", metric: "hle", selectedRegion: null };
+
+  const svg = document.querySelector("svg.map");
+  const tooltip = document.getElementById("tooltip");
+  const metricTitle = document.getElementById("metric-title");
+
+  function colorFor(value, domain, ramp) {
+    let t = (value - domain.min) / (domain.max - domain.min);
+    if (domain.invert) t = 1 - t;
+    t = Math.max(0, Math.min(1, t));
+    const r = Math.round(ramp.start[0] + (ramp.end[0] - ramp.start[0]) * t);
+    const g = Math.round(ramp.start[1] + (ramp.end[1] - ramp.start[1]) * t);
+    const b = Math.round(ramp.start[2] + (ramp.end[2] - ramp.start[2]) * t);
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+
+  function currentRegions() {
+    return data[state.gender][state.period];
+  }
+
+  function render() {
+    const regions = currentRegions();
+    const domain = DOMAINS[state.period][state.metric];
+    const metric = state.metric;
+    const ramp = COLOR_RAMPS[METRIC_TO_RAMP[metric]];
+
+    // Color the regions.
+    document.querySelectorAll(".region").forEach(el => {
+      const r = el.dataset.region;
+      const v = regions[r][metric];
+      el.setAttribute("fill", colorFor(v, domain, ramp));
+    });
+
+    // Clear previous text/divider overlays.
+    document.querySelectorAll(".region-label, .region-value, .region-value-secondary, .region-divider, .region-population").forEach(n => n.remove());
+
+    const metricShort = METRIC_LABELS[metric].short;
+    Object.entries(REGION_LABELS).forEach(([key, info]) => {
+      const rec = regions[key];
+
+      // Region name (always).
+      const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      label.setAttribute("class", "region-label");
+      label.setAttribute("x", info.cx);
+      label.setAttribute("y", info.cy);
+      label.setAttribute("text-anchor", "middle");
+      label.textContent = info.name;
+      svg.appendChild(label);
+
+      // Primary metric value (always).
+      const value = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      value.setAttribute("class", "region-value");
+      value.setAttribute("x", info.cx);
+      value.setAttribute("y", info.cy + 56);
+      value.setAttribute("text-anchor", "middle");
+      value.textContent = `${metricShort} ${rec[metric].toFixed(1)} yrs`;
+      svg.appendChild(value);
+
+      // For HLE, also draw a divider + LE underneath.
+      if (metric === "hle") {
+        const divider = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        divider.setAttribute("class", "region-divider");
+        divider.setAttribute("x1", info.cx - 90);
+        divider.setAttribute("x2", info.cx + 90);
+        divider.setAttribute("y1", info.cy + 80);
+        divider.setAttribute("y2", info.cy + 80);
+        svg.appendChild(divider);
+
+        const secondary = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        secondary.setAttribute("class", "region-value-secondary");
+        secondary.setAttribute("x", info.cx);
+        secondary.setAttribute("y", info.cy + 124);
+        secondary.setAttribute("text-anchor", "middle");
+        secondary.textContent = `LE ${rec.le.toFixed(1)} yrs`;
+        svg.appendChild(secondary);
+      }
+
+      // Population footnote — small, lighter weight, below all metric content.
+      if (info.pop) {
+        const popY = info.cy + (metric === "hle" ? 162 : 102);
+        const popText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        popText.setAttribute("class", "region-population");
+        popText.setAttribute("x", info.cx);
+        popText.setAttribute("y", popY);
+        popText.setAttribute("text-anchor", "middle");
+        popText.textContent = info.pop;
+        svg.appendChild(popText);
+      }
+    });
+
+    // Update header.
+    const periodText = state.period === "birth" ? "at birth" : "at age 65";
+    const metricLong = METRIC_LABELS[metric].long;
+    metricTitle.textContent = `${metricLong} ${periodText}`;
+  }
+
+  // Toggle handlers.
+  document.querySelectorAll(".toggle").forEach(group => {
+    const filter = group.dataset.filter;
+    group.addEventListener("click", e => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+      const value = btn.dataset.value;
+      group.querySelectorAll("button").forEach(b => b.classList.toggle("active", b === btn));
+      state[filter] = value;
+      render();
+    });
+  });
+
+  // Tooltip + selection.
+  const mapWrap = document.querySelector(".map-wrap");
+  document.querySelectorAll(".region").forEach(el => {
+    el.addEventListener("mousemove", e => {
+      const r = el.dataset.region;
+      const rec = currentRegions()[r];
+      const name = REGION_LABELS[r].fullName;
+      const periodText = state.period === "birth" ? "at birth" : "at age 65";
+      const genderText = state.gender === "male" ? "Male" : "Female";
+      tooltip.innerHTML = `
+        <strong>${name}</strong>
+        <span class="tt-meta">${genderText}, ${periodText}</span>
+        <div class="tt-rows">
+          <span class="tt-row${state.metric === 'hle' ? ' is-active' : ''}"><span class="tt-key">HLE</span><span class="tt-val">${rec.hle.toFixed(1)} yrs</span></span>
+          <span class="tt-row${state.metric === 'le'  ? ' is-active' : ''}"><span class="tt-key">LE</span><span class="tt-val">${rec.le.toFixed(1)} yrs</span></span>
+          <span class="tt-row tt-gap${state.metric === 'gap' ? ' is-active' : ''}"><span class="tt-key">Years in poor health</span><span class="tt-val">${rec.gap.toFixed(1)} yrs</span></span>
+        </div>
+      `;
+      tooltip.classList.add("visible");
+      const rect = mapWrap.getBoundingClientRect();
+      tooltip.style.left = (e.clientX - rect.left) + "px";
+      tooltip.style.top = (e.clientY - rect.top) + "px";
+    });
+    el.addEventListener("mouseleave", () => {
+      tooltip.classList.remove("visible");
+    });
+    el.addEventListener("click", () => {
+      const key = el.dataset.region;
+      state.selectedRegion = state.selectedRegion === key ? null : key;
+      document.querySelectorAll(".region").forEach(r => {
+        r.classList.toggle("selected", r.dataset.region === state.selectedRegion);
+      });
+      // Move the selected region to the end of its sibling group so its halo
+      // isn't clipped by adjacent ICBs that would otherwise render over it.
+      if (state.selectedRegion) {
+        const sel = svg.querySelector(`.region[data-region="${state.selectedRegion}"]`);
+        const allRegions = svg.querySelectorAll(".region");
+        const lastRegion = allRegions[allRegions.length - 1];
+        if (sel && sel !== lastRegion) {
+          lastRegion.parentNode.insertBefore(sel, lastRegion.nextSibling);
+        }
+      }
+      renderDetail();
+    });
+  });
+
+  // Detail panel — sparkline + insights placeholders.
+  const trendEl = document.getElementById("detail-trend");
+  const insight1El = document.getElementById("detail-insight-1");
+  const insight2El = document.getElementById("detail-insight-2");
+
+  function fmtSigned(v) {
+    if (Math.abs(v) < 0.05) return "0.0";
+    return (v > 0 ? "+" : "") + v.toFixed(1);
+  }
+
+  function deltaClass(v) {
+    if (v > 0.05) return "up";
+    if (v < -0.05) return "down";
+    return "";
+  }
+
+  function renderDetail() {
+    if (!state.selectedRegion) {
+      trendEl.innerHTML = `<div class="detail-empty">Click an ICB on the map to see how HLE and LE have changed over time.</div>`;
+      insight1El.innerHTML = `<div class="detail-empty">Click an ICB to see key insights.</div>`;
+      insight2El.innerHTML = ``;
+      return;
+    }
+
+    const insights = INSIGHTS[state.selectedRegion] || [];
+    insight1El.innerHTML = insights[0] ? `
+      <div class="insight-headline">${insights[0].headline}</div>
+      <div class="detail-body">${insights[0].body}</div>
+    ` : "";
+    insight2El.innerHTML = insights[1] ? `
+      <div class="insight-headline">${insights[1].headline}</div>
+      <div class="detail-body">${insights[1].body}</div>
+    ` : "";
+
+    const series = TRENDS[state.gender][state.period][state.selectedRegion];
+    const regionShort = REGION_LABELS[state.selectedRegion].name;
+    const ageLabel = state.period === "birth" ? "at birth" : "at age 65";
+    const genderLabel = state.gender === "male" ? "Male" : "Female";
+    const first = series[0];
+    const last  = series[series.length - 1];
+    const periodLabel = (mid) => {
+      const startY = mid - 1;
+      const endY = (mid + 1) % 100;
+      return `${startY}-${endY.toString().padStart(2, '0')}`;
+    };
+    const periodRange = `${periodLabel(first[0])} → ${periodLabel(last[0])}`;
+
+    // One mini sparkline per metric, each scaled to its own range so within-line
+    // variation occupies the full chart height.
+    const buildMini = (idx, color) => {
+      const W = 220, H = 32;
+      const padX = 4, padY = 4;
+      const xS = padX, xE = W - padX, yS = padY, yE = H - padY;
+      const vals = series.map(p => p[idx]);
+      const vMin = Math.min(...vals);
+      const vMax = Math.max(...vals);
+      const pad  = Math.max((vMax - vMin) * 0.20, 0.15);
+      const lo = vMin - pad, hi = vMax + pad;
+      const xScale = i => xS + (i / (series.length - 1)) * (xE - xS);
+      const yScale = v => yE - ((v - lo) / (hi - lo)) * (yE - yS);
+      const path = series.map((p, i) =>
+        `${i === 0 ? "M" : "L"} ${xScale(i).toFixed(1)} ${yScale(p[idx]).toFixed(1)}`
+      ).join(" ");
+      return `
+        <svg class="spark-mini" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+          <path d="${path}" fill="none" stroke="${color}" stroke-width="2"
+                stroke-linejoin="round" stroke-linecap="round"
+                vector-effect="non-scaling-stroke" />
+        </svg>
+      `;
+    };
+
+    const dHle = last[1] - first[1];
+    const dLe  = last[2] - first[2];
+
+    trendEl.innerHTML = `
+      <div class="detail-eyebrow">Trend · ${genderLabel}, ${ageLabel}</div>
+      <div class="detail-title">${regionShort} <span class="title-period">${periodRange}</span></div>
+      <div class="spark-row">
+        <div class="spark-key hle">HLE</div>
+        ${buildMini(1, "#2f5d3a")}
+        <div class="spark-end"><span class="num">${last[1].toFixed(1)}</span> yrs <span class="delta ${deltaClass(dHle)}">${fmtSigned(dHle)}</span></div>
+      </div>
+      <div class="spark-row">
+        <div class="spark-key le">LE</div>
+        ${buildMini(2, "#888888")}
+        <div class="spark-end"><span class="num">${last[2].toFixed(1)}</span> yrs <span class="delta ${deltaClass(dLe)}">${fmtSigned(dLe)}</span></div>
+      </div>
+    `;
+  }
+
+  // Re-render the detail panel whenever the toggles change.
+  document.querySelectorAll(".toggle").forEach(group => {
+    group.addEventListener("click", e => {
+      if (e.target.closest("button")) {
+        renderDetail();
+        renderComparison();
+        renderSlopeChart();
+      }
+    });
+  });
+
+  // Sidebar dumbbell — combined Male + Female by ICB at the active age period.
+  const dumbbellList = document.getElementById("dumbbell-list");
+
+  // Per-ICB key insights — two per ICB, displayed in the middle and right columns
+  // of the bottom panel when an ICB is selected on the map.
+  const INSIGHTS = {
+    north_west: [
+      {
+        headline: "Longer life, but more years of poor health",
+        body: "NW London has among the highest female life expectancy in London (85.4 years), yet women here face a 21.9-year gap between length of life (LE) and healthy life (HLE)."
+      },
+      {
+        headline: "Widening gap between quantity and quality of life",
+        body: "Healthy life expectancy (HLE) at birth has fallen by over a year for both sexes since 2012–2014, even as life expectancy (LE) stayed roughly flat."
+      }
+    ],
+    north_central: [
+      {
+        headline: "Poor overall health outcomes",
+        body: "NC London performs worst on every measure of healthy life expectancy across London. While people in NCL live as long as their wealthier neighbours, they spend many more of those years unwell."
+      },
+      {
+        headline: "London's steepest decline",
+        body: "NC London has experienced the steepest decline in healthy life expectancy of any London ICB. A baby girl born here today can expect 25 years of poor health — almost 30% of her life."
+      }
+    ],
+    north_east: [
+      {
+        headline: "Closing the healthy-life gap",
+        body: "One of only two London ICBs where healthy life expectancy has improved over the decade. In NE London, health gains have outpaced longevity gains."
+      },
+      {
+        headline: "Hardest pandemic hit",
+        body: "In NE London, male life expectancy fell by 1.7 years (2017–2022) — more than twice the drop in SE or SW London. Female LE fell 1.3 years, also the steepest drop of any London ICB."
+      }
+    ],
+    south_east: [
+      {
+        headline: "The most consistently average ICB",
+        body: "SE London sits within 1 year of the London ICBs average on virtually every metric. HLE metrics are close to the typical London picture across all sexes and ages."
+      },
+      {
+        headline: "Most pandemic-resilient",
+        body: "It was the most resilient to the pandemic, with the smallest drop in male life expectancy (−0.7 years from 2017–2019 to 2020–2022), less than half the impact seen in NE London."
+      }
+    ],
+    south_west: [
+      {
+        headline: "London's healthiest ICB",
+        body: "The clear best performer in London on healthy life. The gap between length and quality of life is the smallest in London."
+      },
+      {
+        headline: "Healthy years compound after 65",
+        body: "At age 65, the advantage compounds. SW London men spend 58% of their remaining years in good health, against 47% in NC London."
+      }
+    ]
+  };
+
+  const ICB_ABBR = {
+    north_west: "NWL",
+    north_central: "NCL",
+    north_east: "NEL",
+    south_east: "SEL",
+    south_west: "SWL"
+  };
+
+  function renderComparison() {
+    const period = state.period;
+    const rows = ["north_west","north_central","north_east","south_east","south_west"].map(key => {
+      const m = data.male[period][key];
+      const f = data.female[period][key];
+      const hle = (m.hle + f.hle) / 2;
+      const le  = (m.le  + f.le)  / 2;
+      return { key, abbr: ICB_ABBR[key], fullName: REGION_LABELS[key].fullName, hle, le, gap: le - hle };
+    });
+
+    // Sort by gap descending so the longest line sits at the top.
+    rows.sort((a, b) => b.gap - a.gap);
+
+    // Shared x-axis: HLE-min to LE-max with small padding.
+    const xMin = Math.min(...rows.map(r => r.hle));
+    const xMax = Math.max(...rows.map(r => r.le));
+    const xPad = (xMax - xMin) * 0.08;
+    const lo = xMin - xPad, hi = xMax + xPad;
+
+    const W = 120, H = 16, padX = 6;
+    const xS = padX, xE = W - padX;
+    const xScale = v => xS + ((v - lo) / (hi - lo)) * (xE - xS);
+
+    dumbbellList.innerHTML = rows.map(r => {
+      const xH = xScale(r.hle).toFixed(1);
+      const xL = xScale(r.le).toFixed(1);
+      return `
+        <div class="dumbbell-row" title="${r.fullName} · HLE ${r.hle.toFixed(1)} / LE ${r.le.toFixed(1)} · gap ${r.gap.toFixed(1)} yrs">
+          <div class="dumbbell-name">${r.abbr}</div>
+          <svg class="dumbbell-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
+            <line class="dumbbell-line" x1="${xH}" x2="${xL}" y1="${H/2}" y2="${H/2}" />
+            <circle class="hle" cx="${xH}" cy="${H/2}" r="3.6" />
+            <circle class="le"  cx="${xL}" cy="${H/2}" r="3.6" />
+          </svg>
+          <div class="dumbbell-gap">${r.gap.toFixed(1)}</div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  // Slope chart — decade ago vs now per ICB (sidebar).
+  // Each ICB drawn as a line connecting its 2011-13 HLE to its 2022-24 HLE,
+  // colored by direction (green = improvement, coral = decline).
+  const slopeChartEl = document.getElementById("slope-chart");
+
+  function renderSlopeChart() {
+    const period = state.period;
+
+    const rows = ["north_west","north_central","north_east","south_east","south_west"].map(key => {
+      const m = TRENDS.male[period][key];
+      const f = TRENDS.female[period][key];
+      const startVal = (m[0][1] + f[0][1]) / 2;
+      const endVal   = (m[m.length-1][1] + f[f.length-1][1]) / 2;
+      const delta    = endVal - startVal;
+      const direction = Math.abs(delta) < 0.2 ? "flat" : (delta > 0 ? "up" : "down");
+      return { key, abbr: ICB_ABBR[key], start: startVal, end: endVal, delta, direction };
+    });
+
+    // y-domain spans both endpoints across all 5 ICBs.
+    const allVals = rows.flatMap(r => [r.start, r.end]);
+    const yMin = Math.min(...allVals);
+    const yMax = Math.max(...allVals);
+    const yPad = Math.max((yMax - yMin) * 0.16, 0.4);
+    const lo = yMin - yPad, hi = yMax + yPad;
+
+    const W = 240, H = 160;
+    const padL = 30, padR = 64, padT = 22, padB = 22;
+    const xS = padL, xE = W - padR;
+    const yS = padT, yE = H - padB;
+
+    const yScale = v => yE - ((v - lo) / (hi - lo)) * (yE - yS);
+
+    // Format to 1 decimal place with a tiny epsilon so values like 64.05
+    // (which floats may store as 64.04999...) round up to "64.1" not "64.0".
+    const fmt1 = v => (Math.round(v * 10 + 1e-7) / 10).toFixed(1);
+
+    // Label dodge + optional cluster-dedupe. Sorts items by their actual y,
+    // pushes any that would sit within minLabelGap of the previous one further
+    // down, and (when dedupe=true) hides labels whose `value` is within
+    // `tolerance` of the previous shown one — so visually clustered values
+    // collapse to a single representative label.
+    const minLabelGap = 10;
+    function dodge(items, dedupe, tolerance) {
+      const order = items.map((it, i) => ({ i, y: it.y, value: it.value }))
+                         .sort((a, b) => a.y - b.y);
+      let prev = -Infinity;
+      let prevValue = null;
+      const result = new Array(items.length);
+      order.forEach(o => {
+        if (dedupe && prevValue !== null && Math.abs(o.value - prevValue) <= tolerance) {
+          result[o.i] = { y: o.y, show: false };
+        } else {
+          const y = Math.max(o.y, prev + minLabelGap);
+          result[o.i] = { y, show: true };
+          prev = y;
+          prevValue = o.value;
+        }
+      });
+      return result;
+    }
+
+    const startYs = rows.map(r => yScale(r.start));
+    const endYs   = rows.map(r => yScale(r.end));
+    const startInfo = dodge(rows.map((r, i) => ({ y: startYs[i], value: r.start })), true, 0.2);
+    const endInfo   = dodge(rows.map((r, i) => ({ y: endYs[i] })), false);
+
+    let svg = `
+      <svg class="slope-chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
+        <text class="col-header" x="${xS}" y="${padT - 8}" text-anchor="middle">2011-13</text>
+        <text class="col-header" x="${xE}" y="${padT - 8}" text-anchor="middle">2022-24</text>
+    `;
+
+    rows.forEach((r, i) => {
+      const yStart = startYs[i];
+      const yEnd   = endYs[i];
+      const lblStart = startInfo[i];
+      const lblEnd   = endInfo[i];
+      svg += `
+        <line class="slope-line ${r.direction}" x1="${xS}" y1="${yStart.toFixed(1)}" x2="${xE}" y2="${yEnd.toFixed(1)}" />
+        <circle class="dot ${r.direction}" cx="${xS}" cy="${yStart.toFixed(1)}" r="2.4" />
+        <circle class="dot ${r.direction}" cx="${xE}" cy="${yEnd.toFixed(1)}"   r="2.4" />
+        ${lblStart.show ? `<text class="value-label" x="${xS - 6}" y="${lblStart.y.toFixed(1)}" text-anchor="end">${fmt1(r.start)}</text>` : ""}
+        <text class="value-label ${r.direction}" x="${xE + 8}" y="${lblEnd.y.toFixed(1)}" text-anchor="start">${fmt1(r.end)}</text>
+        <text class="icb-label"   x="${xE + 34}" y="${lblEnd.y.toFixed(1)}" text-anchor="start">${r.abbr}</text>
+      `;
+    });
+
+    svg += `</svg>`;
+    slopeChartEl.innerHTML = svg;
+  }
+
+  render();
+  renderDetail();
+  renderComparison();
+  renderSlopeChart();
+
+  // Top-nav routing — switches between the Map, Trends, Methodology, and
+  // About views by showing/hiding the relevant page sections.
+  const sidebarEl = document.querySelector(".sidebar");
+  const mainEl = document.querySelector(".main");
+  const trendsEl = document.querySelector(".trends");
+  const methodologyEl = document.querySelector(".methodology");
+  const aboutEl = document.querySelector(".about");
+
+  function navigateTo(view) {
+    const isMap = view === "map";
+    sidebarEl.hidden = !isMap;
+    mainEl.hidden = !isMap;
+    trendsEl.hidden = view !== "trends";
+    methodologyEl.hidden = view !== "methodology";
+    aboutEl.hidden = view !== "about";
+
+    document.querySelectorAll(".nav-links a").forEach(a => {
+      if (a.dataset.view) {
+        a.classList.toggle("is-active", a.dataset.view === view);
+      }
+    });
+
+    if (view === "trends") trendsEl.scrollTop = 0;
+    if (view === "methodology") methodologyEl.scrollTop = 0;
+    if (view === "about") aboutEl.scrollTop = 0;
+  }
+
+  document.querySelectorAll(".nav-links a").forEach(a => {
+    a.addEventListener("click", e => {
+      e.preventDefault();
+      if (a.classList.contains("is-disabled")) return;
+      if (a.dataset.view) navigateTo(a.dataset.view);
+      // Close mobile nav drawer (no-op on desktop where it isn't .is-open).
+      closeNavDrawer();
+    });
+  });
+
+  // Hamburger toggle — only visible at the mobile breakpoint via CSS.
+  const navToggleEl = document.querySelector(".nav-toggle");
+  const navLinksEl = document.querySelector(".nav-links");
+
+  function closeNavDrawer() {
+    navLinksEl.classList.remove("is-open");
+    navToggleEl.setAttribute("aria-expanded", "false");
+  }
+
+  navToggleEl.addEventListener("click", () => {
+    const isOpen = navLinksEl.classList.toggle("is-open");
+    navToggleEl.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  });
+</script>
+</body>
+</html>
